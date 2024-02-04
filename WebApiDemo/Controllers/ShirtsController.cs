@@ -1,39 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApiDemo.Filters;
+using WebApiDemo.Models;
+using WebApiDemo.Models.Repositories;
 
 namespace WebApiDemo.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ShirtsController: ControllerBase
-    {
+    public class ShirtsController : ControllerBase {
         [HttpGet]
-        public string Index()
-        {
-            return "Index: Indexed all the shirts.";
+        public IActionResult Index() {
+            return Ok(ShirtRepository.GetShirts());
         }
 
         [HttpGet("{id}")]
-        public string Show(int id)
-        {
-            return $"Show: {id}";
+        [Shirt_ValidateShirtIdFilter]
+        public IActionResult Show(int id) {
+            return Ok(ShirtRepository.GetShirtById(id));
         }
 
         [HttpPost]
-        public string Create()
-        {
-            return "Create: Created.";
+        public IActionResult Create([FromBody]Shirt shirt) {
+            return Ok("Create: Created.");
         }
 
         [HttpPut("{id}")]
-        public string Update(int id)
-        {
-            return $"Update: {id}.";
+        public IActionResult Update(int id) {
+            return Ok($"Update: {id}.");
         }
 
         [HttpDelete("{id}")]
-        public string Delete(int id)
-        {
-            return $"Delete: {id}.";
+        public IActionResult Delete(int id) {
+            return Ok($"Delete: {id}.");
         }
     }
 }
