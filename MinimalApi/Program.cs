@@ -1,10 +1,10 @@
-using MinimalApi.src.Database;
-using MinimalApi.src.Database.Services;
+using MinimalApi.Infrastructure;
+using MinimalApi.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
-builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
