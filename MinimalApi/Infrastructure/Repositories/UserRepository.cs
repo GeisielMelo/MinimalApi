@@ -1,15 +1,15 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Bson;
-using MinimalApi.src.Database.Models;
+using MinimalApi.Domain.Models;
 
-namespace MinimalApi.src.Database.Services
+namespace MinimalApi.Infrastructure.Repositories
 {
-    public class UserService
+    public class UserRepository
     {
         private readonly IMongoCollection<User> _userCollection;
 
-        public UserService(IOptions<MongoDBSettings> mongoDBSettings) {
+        public UserRepository(IOptions<MongoDBSettings> mongoDBSettings) {
             MongoClient client = new MongoClient(mongoDBSettings.Value.ConnectionURI);
             IMongoDatabase database = client.GetDatabase(mongoDBSettings.Value.DatabaseName);
             _userCollection = database.GetCollection<User>("users");

@@ -1,4 +1,4 @@
-namespace MinimalApi.src.Database
+namespace MinimalApi.Infrastructure
 {
     public class MongoDBSettings {
         public string ConnectionURI { get; set; } = null!;

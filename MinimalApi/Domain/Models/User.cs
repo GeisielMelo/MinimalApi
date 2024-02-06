@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using MinimalApi.Domain.Validations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace MinimalApi.src.Database.Models
+namespace MinimalApi.Domain.Models
 {
     public class User
     {
@@ -12,9 +13,11 @@ namespace MinimalApi.src.Database.Models
         public string? Id { get; set; }
 
         [Required]
+        [User_EnsureCorrectEmail]
         public string Email { get; set; } = null!;
 
         [Required]
+        [User_EnsureCorrectPassword]
         public string Password { get; set; } = null!;
     }
 }

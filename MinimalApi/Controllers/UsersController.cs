@@ -1,17 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
-using MinimalApi.src.Database.Models;
-using MinimalApi.src.Database.Services;
+using MinimalApi.Infrastructure.Repositories;
+using MinimalApi.Domain.Models;
 
-namespace MinimalApi.src.Application.Controllers.UsersController
+using MinimalApi.Filters;
+
+namespace MinimalApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
 
-        private readonly UserService _mongoDBService;
+        private readonly UserRepository _mongoDBService;
 
-        public UsersController(UserService mongoDBService) {
+        public UsersController(UserRepository mongoDBService) {
             _mongoDBService = mongoDBService;
         }
 
@@ -21,6 +23,7 @@ namespace MinimalApi.src.Application.Controllers.UsersController
         }
 
         [HttpGet("{id}")]
+        [User_ValidateUserIdFilter]
         public async Task<IActionResult> Show(string id) {
             return Ok(await _mongoDBService.GetUserById(id));
         }
@@ -38,6 +41,7 @@ namespace MinimalApi.src.Application.Controllers.UsersController
         }
 
         [HttpDelete("{id}")]
+        [User_ValidateUserIdFilter]
         public async Task<IActionResult> Delete(string id) {
             await _mongoDBService.DeleteUser(id);
             return Ok("User deleted successfully.");
