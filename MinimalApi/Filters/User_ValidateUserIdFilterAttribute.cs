@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using MinimalApi.Infrastructure.Repositories;
+using MinimalApi.Infrastructure.Services;
 
 namespace MinimalApi.Filters
 {
@@ -29,7 +29,7 @@ namespace MinimalApi.Filters
                 return;
             }
             else{
-                var userService = context.HttpContext.RequestServices.GetService(typeof(UserRepository)) as UserRepository;
+                var userService = context.HttpContext.RequestServices.GetService(typeof(UserService)) as UserService;
                 if (userService == null) {
                     context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                     return;
