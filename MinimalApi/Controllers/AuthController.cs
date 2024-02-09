@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MinimalApi.Domain.Models;
+using MinimalApi.Filters.AuthFilters;
 using MinimalApi.Infrastructure.Services;
 
 namespace MinimalApi.Controllers
@@ -8,16 +9,23 @@ namespace MinimalApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly AuthRepository _authService;
 
-        public AuthController(AuthService authService) {
+        public AuthController(AuthRepository authService) {
             _authService = authService;
         }
         
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody]User user) {
+        [Auth_ValidateUserFilter]
+        public async Task<ActionResult> Create([FromBody]User user) {
              return Ok(await _authService.Login(user));
         }
 
+        [HttpPost]
+        [Auth_ValidateTokenFilter]
+        public async Task<IActionResult> Destroy(string token) {
+            await _authService.Logout(token);
+            return Ok();
+        }
     }
 }
