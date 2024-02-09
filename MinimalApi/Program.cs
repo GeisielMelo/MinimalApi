@@ -7,8 +7,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<AuthService>();
+builder.Services.AddSingleton<UserRepository>();
+builder.Services.AddSingleton<AuthRepository>();
 builder.Services.AddControllers();
 
 builder.Services.AddAuthentication( x => {
