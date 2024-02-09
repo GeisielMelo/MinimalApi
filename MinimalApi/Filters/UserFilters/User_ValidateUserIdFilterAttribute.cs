@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MinimalApi.Infrastructure.Services;
 
-namespace MinimalApi.Filters
+namespace MinimalApi.Filters.UserFilters
 {
     public class User_ValidateUserIdFilterAttribute : ActionFilterAttribute
     {
@@ -29,7 +29,7 @@ namespace MinimalApi.Filters
                 return;
             }
             else{
-                var userService = context.HttpContext.RequestServices.GetService(typeof(UserService)) as UserService;
+                var userService = context.HttpContext.RequestServices.GetService(typeof(UserRepository)) as UserRepository;
                 if (userService == null) {
                     context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
                     return;
@@ -46,7 +46,6 @@ namespace MinimalApi.Filters
                     return;
                 }
             }
-
             await next();
         }
     }
