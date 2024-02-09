@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinimalApi.Domain.Models;
-using MinimalApi.Filters;
+using MinimalApi.Filters.UserFilters;
 using MinimalApi.Infrastructure.Services;
 
 namespace MinimalApi.Controllers
@@ -11,9 +11,9 @@ namespace MinimalApi.Controllers
     public class UsersController : ControllerBase
     {
 
-        private readonly UserService _mongoDBService;
+        private readonly UserRepository _mongoDBService;
 
-        public UsersController(UserService mongoDBService) {
+        public UsersController(UserRepository mongoDBService) {
             _mongoDBService = mongoDBService;
         }
 
@@ -31,6 +31,7 @@ namespace MinimalApi.Controllers
         }
 
         [HttpPost]
+        [User_ValidateRegisteredEmailFilter]
         public async Task<IActionResult> Create([FromBody]User user) {
             await _mongoDBService.CreateUser(user);
             return Ok("User created successfully.");
