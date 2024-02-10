@@ -1,16 +1,18 @@
-using Microsoft.AspNetCore.Mvc;
+using MinimalApi.Application.Services;
 using MinimalApi.Domain.Models;
 
-namespace MinimalApi.Infrastructure.Services
+namespace MinimalApi.Infrastructure.Repositories
 {
     public class AuthRepository
     {
-        public async Task<ActionResult<User>> Login(User user) {
-            return await GenerateToken(user);
+        private readonly TokenService _tokenService;
+
+        public AuthRepository(TokenService tokenService){
+            _tokenService = tokenService;
         }
 
-        public async Task<ActionResult<User>> Logout(string token) {
-            return await RevokeToken(token);
+        public async Task<string> Login(User user) {
+            return await _tokenService.GenerateToken(user);
         }
     }
 }
