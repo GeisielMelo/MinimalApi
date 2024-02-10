@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MinimalApi.Domain.Models;
-using MinimalApi.Infrastructure.Services;
+using MinimalApi.Infrastructure.Repositories;
 
 namespace MinimalApi.Filters.AuthFilters
 {

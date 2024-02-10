@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinimalApi.Domain.Models;
 using MinimalApi.Filters.UserFilters;
-using MinimalApi.Infrastructure.Services;
+using MinimalApi.Infrastructure.Repositories;
 
 namespace MinimalApi.Controllers
 {
