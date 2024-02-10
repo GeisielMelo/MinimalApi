@@ -5,10 +5,15 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using MinimalApi.Application.Services;
+using MinimalApi.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = new Configuration();
 
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.Configure<MongoDBSettings>(options => {
+    options.ConnectionURI = configuration.GetValue("MONGODB_URI");
+});
+
 builder.Services.AddSingleton<JwtSecurityTokenHandler>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddSingleton<UserRepository>();
@@ -21,9 +26,9 @@ builder.Services.AddAuthentication( x => {
   x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(x => {
   x.TokenValidationParameters = new TokenValidationParameters {
-    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-    ValidAudience = builder.Configuration["Jwt:Audience"],
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+    ValidIssuer = configuration.GetValue("JWT_ISSUER"),
+    ValidAudience = configuration.GetValue("JWT_AUDIENCE"),
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue("JWT_SECRET"))),
     ValidateIssuer = true,
     ValidateAudience = true,
     ValidateLifetime = true,
