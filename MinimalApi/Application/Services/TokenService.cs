@@ -2,23 +2,23 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using MinimalApi.Configurations;
 using MinimalApi.Domain.Models;
 
 namespace MinimalApi.Application.Services
 {
     public class TokenService
     {
-        private readonly IConfiguration _configuration;
         private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        public TokenService(IConfiguration configuration, JwtSecurityTokenHandler tokenHandler)
+        public TokenService(JwtSecurityTokenHandler tokenHandler)
         {
-            _configuration = configuration;
             _tokenHandler = tokenHandler;
         }
 
         public async Task<string> GenerateToken(User user)
         {
+            var configuration = new Configuration();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -27,8 +27,8 @@ namespace MinimalApi.Application.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
-                Issuer = "https://github.com/GeisielMelo",
-                Audience = "https://github.com/GeisielMelo",
+                Issuer = configuration.GetValue("JWT_ISSUER"),
+                Audience = configuration.GetValue("JWT_AUDIENCE"),
                 SigningCredentials = GetSigningCredentials()
             };
 
@@ -37,14 +37,9 @@ namespace MinimalApi.Application.Services
         }
 
         private SigningCredentials GetSigningCredentials()
-        {
-            var secret = _configuration["Jwt:Key"];
-
-            if (secret == null)
-            {
-                throw new ArgumentNullException(nameof(secret));
-            }
-            var key = Encoding.UTF8.GetBytes(secret);
+        {        
+            var configuration = new Configuration();
+            var key = Encoding.UTF8.GetBytes(configuration.GetValue("JWT_SECRET"));
             return new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
         }
     }
