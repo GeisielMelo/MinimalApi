@@ -1,14 +1,12 @@
-using System;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi.Domain.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace MinimalApi.Application.Services
 {
-    public class TokenService : ITokenService
+    public class TokenService
     {
         private readonly IConfiguration _configuration;
         private readonly JwtSecurityTokenHandler _tokenHandler;
@@ -19,7 +17,7 @@ namespace MinimalApi.Application.Services
             _tokenHandler = tokenHandler;
         }
 
-        public string GenerateToken(User user)
+        public async Task<string> GenerateToken(User user)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -29,18 +27,23 @@ namespace MinimalApi.Application.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
-                Issuer = "MinimalApi",
-                Audience = "MinimalApi",
+                Issuer = "https://github.com/GeisielMelo",
+                Audience = "https://github.com/GeisielMelo",
                 SigningCredentials = GetSigningCredentials()
             };
 
             var token = _tokenHandler.CreateToken(tokenDescriptor);
-            return _tokenHandler.WriteToken(token);
+            return await Task.FromResult(_tokenHandler.WriteToken(token));
         }
 
         private SigningCredentials GetSigningCredentials()
         {
-            var secret = _configuration["Jwt:TokenSecret"];
+            var secret = _configuration["Jwt:Key"];
+
+            if (secret == null)
+            {
+                throw new ArgumentNullException(nameof(secret));
+            }
             var key = Encoding.UTF8.GetBytes(secret);
             return new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
         }
