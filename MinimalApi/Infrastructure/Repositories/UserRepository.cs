@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using MinimalApi.Domain.Models;
 
-namespace MinimalApi.Infrastructure.Services
+namespace MinimalApi.Infrastructure.Repositories
 {
     public class UserRepository
     {
